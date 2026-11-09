@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "Precious Metals Premium Calculator",
+  "short_name": "Metal Premium",
+  "description": "Check how far above melt value a gold, silver, platinum or palladium item is priced.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0e2620",
+  "theme_color": "#0e2620",
+  "categories": ["finance", "shopping"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

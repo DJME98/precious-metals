@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-visual">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; worker-src 'self'; style-src 'self'; img-src 'self'; connect-src https://api.gold-api.com https://open.er-api.com; manifest-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#0e2620">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="Check how far above melt value a gold, silver, platinum or palladium item is priced.">
+<title>Metal Premium</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-metal="gold">
+
+<header class="bar">
+  <h1 id="metalName">Gold</h1>
+  <div class="bar-r">
+    <span class="spot-head" id="spotHead"></span>
+    <button class="icon-btn small" id="toolsBtn" type="button" aria-label="Open converter and settings">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M4 7h10M18 7h2M4 17h2M10 17h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section class="plate" id="plate" aria-label="Premium over melt value">
+    <p class="plate-num" id="premium">—</p>
+    <p class="plate-line"><span class="dot" id="dot" hidden></span><span id="plateLine">Enter the asking price.</span></p>
+    <p class="plate-sub" id="plateSub"></p>
+  </section>
+
+  <div class="fields" role="group" aria-label="Item details">
+    <div class="field">
+      <label class="label" for="price">Asking price</label>
+      <div class="ctl">
+        <input id="price" inputmode="decimal" autocomplete="off" placeholder="0.00" enterkeyhint="next">
+        <select id="currency" aria-label="Currency"></select>
+      </div>
+      <p class="note" id="rateNote" hidden></p>
+    </div>
+
+    <div class="field">
+      <label class="label" for="weight">Weight</label>
+      <div class="ctl">
+        <input id="weight" inputmode="decimal" autocomplete="off" placeholder="0" enterkeyhint="next">
+        <select id="unit" aria-label="Weight unit"></select>
+      </div>
+      <div class="chips" id="chips" role="group" aria-label="Common weights"></div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="purity">Purity</label>
+      <select id="purity" class="full"></select>
+      <div id="customWrap" hidden>
+        <input id="custom" class="gap" inputmode="decimal" autocomplete="off" placeholder="Percent, for example 91.6" aria-label="Custom purity in percent">
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="label" for="spot">Spot price (USD per troy oz)</label>
+      <div class="ctl">
+        <input id="spot" inputmode="decimal" autocomplete="off" placeholder="Not loaded yet">
+        <button class="icon-btn" id="spotRefresh" type="button" aria-label="Refresh live spot price">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+      <p class="note"><span id="spotNote"></span> <button class="link" id="spotLive" type="button" hidden>Use the live price</button></p>
+    </div>
+  </div>
+
+  <section class="sec" aria-labelledby="detailsH">
+    <h2 class="h2" id="detailsH">Details</h2>
+    <dl class="ledger" id="details"></dl>
+  </section>
+
+  <p class="fine">For information only, not financial advice. Prices from other sources can be delayed or wrong. Check before you buy.</p>
+</main>
+
+<nav class="dock" aria-label="Choose a metal">
+  <div class="dock-in" id="dock" role="tablist"></div>
+</nav>
+
+<dialog id="tools" aria-labelledby="toolsH">
+  <div class="sheet">
+    <h2 class="h2 big" id="toolsH">Converter and settings</h2>
+
+    <section class="sec tight" aria-labelledby="convH">
+      <h3 class="h3" id="convH">Currency converter</h3>
+      <div class="ctl">
+        <input id="convAmount" inputmode="decimal" autocomplete="off" placeholder="Amount" aria-label="Amount to convert">
+        <select id="convFrom" aria-label="Convert from"></select>
+      </div>
+      <ul class="conv" id="convOut"></ul>
+    </section>
+
+    <section class="sec" aria-labelledby="ratesH">
+      <h3 class="h3" id="ratesH">Exchange rates</h3>
+      <p class="note first">How much of each currency one US dollar buys. You can type your own.</p>
+      <div class="rates" id="ratesGrid"></div>
+      <div class="ctl gapt">
+        <button class="btn" id="ratesBtn" type="button">Update rates</button>
+      </div>
+      <p class="note" id="ratesStatus"></p>
+    </section>
+
+    <section class="sec" aria-labelledby="aboutH">
+      <h3 class="h3" id="aboutH">About</h3>
+      <p class="note first">Everything you type stays on this phone. The app asks gold-api.com for spot prices and open.er-api.com for exchange rates, and sends nothing about you or your items. Not financial advice.</p>
+      <p class="note"><a href="https://www.exchangerate-api.com" target="_blank" rel="noopener noreferrer">Rates by Exchange Rate API</a> &nbsp; <a href="privacy.html" target="_blank" rel="noopener">Privacy policy</a></p>
+      <p class="note">Version <span id="ver"></span></p>
+      <button class="btn primary" id="installBtn" type="button" hidden>Install on this phone</button>
+    </section>
+
+    <button class="btn full gapt" id="closeTools" type="button">Done</button>
+  </div>
+</dialog>
+
+<noscript><p class="fine">This app needs JavaScript.</p></noscript>
+<script src="app.js"></script>
+</body>
+</html>
